@@ -1,0 +1,76 @@
+digraph {
+  bgcolor=transparent;
+  truecolor=true;
+  rankdir=LR;
+  node [style="filled"];
+
+  subgraph cluster_Q_direct_logs_2 {
+    label="direct_logs.2";
+    color=transparent;
+    "Q_direct_logs_2" [label="{||||}", fillcolor="red", shape="record"];
+  }
+
+  subgraph cluster_Q_task_queue {
+    label="task_queue";
+    color=transparent;
+    "Q_task_queue" [label="{||||}", fillcolor="red", shape="record"];
+  }
+
+  subgraph cluster_Q_direct_logs_1 {
+    label="direct_logs.1";
+    color=transparent;
+    "Q_direct_logs_1" [label="{||||}", fillcolor="red", shape="record"];
+  }
+
+  subgraph cluster_Q_topic_logs_all {
+    label="topic_logs.all";
+    color=transparent;
+    "Q_topic_logs_all" [label="{||||}", fillcolor="red", shape="record"];
+  }
+
+  subgraph cluster_Q_logs_1 {
+    label="logs.1";
+    color=transparent;
+    "Q_logs_1" [label="{||||}", fillcolor="red", shape="record"];
+  }
+
+  subgraph cluster_Q_topic_logs_kern {
+    label="topic_logs.kern";
+    color=transparent;
+    "Q_topic_logs_kern" [label="{||||}", fillcolor="red", shape="record"];
+  }
+
+  subgraph cluster_Q_topic_l_logs_critical {
+    label="topic_l_logs.critical";
+    color=transparent;
+    "Q_topic_l_logs_critical" [label="{||||}", fillcolor="red", shape="record"];
+  }
+
+  subgraph cluster_X_topic_logs {
+    label="topic_logs\ntype=topic";
+    color=transparent;
+    "X_topic_logs" [label="X", fillcolor="#3333CC", shape="ellipse"];
+  }
+
+  subgraph cluster_X_logs {
+    label="logs\ntype=fanout";
+    color=transparent;
+    "X_logs" [label="X", fillcolor="#3333CC", shape="ellipse"];
+  }
+
+  subgraph cluster_X_direct_logs {
+    label="direct_logs\ntype=direct";
+    color=transparent;
+    "X_direct_logs" [label="X", fillcolor="#3333CC", shape="ellipse"];
+  }
+
+  X_direct_logs -> Q_direct_logs_1 [label="error"];
+  X_direct_logs -> Q_direct_logs_2 [label="error"];
+  X_direct_logs -> Q_direct_logs_2 [label="info"];
+  X_direct_logs -> Q_direct_logs_1 [label="warning"];
+  X_direct_logs -> Q_direct_logs_2 [label="warning"];
+  X_logs -> Q_logs_1 [label=""];
+  X_topic_logs -> Q_topic_logs_all [label="#"];
+  X_topic_logs -> Q_topic_l_logs_critical [label="*_critical"];
+  X_topic_logs -> Q_topic_logs_kern [label="kern_*"];
+}
