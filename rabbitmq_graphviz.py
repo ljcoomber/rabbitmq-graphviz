@@ -2,9 +2,6 @@ import argparse
 import json
 import sys
 
-# TODO:
-# - vhost
-
 def escape_id(id):
     return id.replace('-', '').replace('.', '_')
 
