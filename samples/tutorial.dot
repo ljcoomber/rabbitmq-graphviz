@@ -52,18 +52,24 @@ digraph {
     "X_topic_logs" [label="X", fillcolor="#3333CC", shape="ellipse"];
   }
 
+  "P_topic_logs" [label="P", style="filled", fillcolor="#00ffff"];
+  "P_topic_logs" -> "X_topic_logs";
   subgraph cluster_X_logs {
     label="logs\ntype=fanout";
     color=transparent;
     "X_logs" [label="X", fillcolor="#3333CC", shape="ellipse"];
   }
 
+  "P_logs" [label="P", style="filled", fillcolor="#00ffff"];
+  "P_logs" -> "X_logs";
   subgraph cluster_X_direct_logs {
     label="direct_logs\ntype=direct";
     color=transparent;
     "X_direct_logs" [label="X", fillcolor="#3333CC", shape="ellipse"];
   }
 
+  "P_direct_logs" [label="P", style="filled", fillcolor="#00ffff"];
+  "P_direct_logs" -> "X_direct_logs";
   X_direct_logs -> Q_direct_logs_1 [label="error"];
   X_direct_logs -> Q_direct_logs_2 [label="error"];
   X_direct_logs -> Q_direct_logs_2 [label="info"];
