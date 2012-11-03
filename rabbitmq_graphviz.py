@@ -1,9 +1,6 @@
 import argparse
 import json
-import logging
 import sys
-
-logging.basicConfig(level=logging.INFO)
 
 # TODO:
 # - vhost
