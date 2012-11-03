@@ -2,8 +2,8 @@ import argparse
 import json
 import sys
 
-def escape_id(id):
-    return id.replace('-', '').replace('.', '_')
+def escape_id(id_str):
+    return id_str.replace('-', '').replace('.', '_')
 
 def render_definitions(write, definitions):
     write('digraph {')
