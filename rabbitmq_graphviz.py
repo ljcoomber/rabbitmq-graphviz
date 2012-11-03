@@ -5,43 +5,48 @@ import sys
 def escape_id(id_str):
     return id_str.replace('-', '').replace('.', '_')
 
-def render_definitions(write, definitions, render_producers, render_consumers):
-    write('digraph {')
-    write('  bgcolor=transparent;')
-    write('  truecolor=true;')
-    write('  rankdir=LR;')
-    write('  node [style="filled"];\n')
+def build_definitions(definitions, render_producers, render_consumers):
+    return ''.join([
+        'digraph {\n',
+        '  bgcolor=transparent;\n',
+        '  truecolor=true;\n',
+        '  rankdir=LR;\n',
+        '  node [style="filled"];\n\n',
+        ''.join([build_queue(q, render_consumers) for q in definitions['queues']]),
+        ''.join([build_exchange(x, render_producers) for x in definitions['exchanges']]),
+        ''.join([build_binding(b) for b in definitions['bindings']]),
+        '}'])
 
-    [render_queue(write, q, render_consumers) for q in definitions['queues']]
-    [render_exchange(write, x, render_producers) for x in definitions['exchanges']]
-    [render_binding(write, b) for b in definitions['bindings']]
-
-    write('}')
-
-def render_queue(write, queue, render_consumers):
-    write('  subgraph cluster_Q_%s {' % escape_id(queue['name']))
-    write('    label="%s";' % queue['name'])
-    write('    color=transparent;')
-    write('    "Q_%s" [label="{||||}", fillcolor="red", shape="record"];' % escape_id(queue['name']))
-    write('  }\n')
+def build_queue(queue, render_consumers):
+    lines = [
+        '  subgraph cluster_Q_%s {\n' % escape_id(queue['name']),
+        '    label="%s";\n' % queue['name'],
+        '    color=transparent;\n',
+        '    "Q_%s" [label="{||||}", fillcolor="red", shape="record"];\n' % escape_id(queue['name']),
+        '  }\n\n']
 
     if render_consumers:
-        write('  "C_%s" [label="C", fillcolor="#33ccff"];' % escape_id(queue['name']))
-        write('  "Q_%(name)s" -> "C_%(name)s"' % { 'name': escape_id(queue['name'])})
+        lines.append('  "C_%s" [label="C", fillcolor="#33ccff"];' % escape_id(queue['name']))
+        lines.append('  "Q_%(name)s" -> "C_%(name)s"' % { 'name': escape_id(queue['name'])})
 
-def render_exchange(write, exchange, render_producers):
-    write('  subgraph cluster_X_%s {' % escape_id(exchange['name']))
-    write('    label="%s\\ntype=%s";' % (exchange['name'], exchange['type']))
-    write('    color=transparent;')
-    write('    "X_%s" [label="X", fillcolor="#3333CC", shape="ellipse"];' % escape_id(exchange['name']))
-    write('  }\n')
+    return ''.join(lines)
+
+def build_exchange(exchange, render_producers):
+    lines = [
+        '  subgraph cluster_X_%s {\n' % escape_id(exchange['name']),
+        '    label="%s\\ntype=%s";\n' % (exchange['name'], exchange['type']),
+        '    color=transparent;\n',
+        '    "X_%s" [label="X", fillcolor="#3333CC", shape="ellipse"];\n' % escape_id(exchange['name']),
+        '  }\n\n']
 
     if render_producers:
-        write('  "P_%s" [label="P", style="filled", fillcolor="#00ffff"];' % escape_id(exchange['name']))
-        write('  "P_%(name)s" -> "X_%(name)s";' % { 'name': escape_id(exchange['name']) })
+        lines.append('  "P_%s" [label="P", style="filled", fillcolor="#00ffff"];' % escape_id(exchange['name']))
+        lines.append('  "P_%(name)s" -> "X_%(name)s";' % { 'name': escape_id(exchange['name']) })
 
-def render_binding(write, binding):
-    write('  X_%s -> Q_%s [label="%s"];' % (escape_id(binding['source']), escape_id(binding['destination']), binding['routing_key']))
+    return ''.join(lines)
+
+def build_binding(binding):
+    return '  X_%s -> Q_%s [label="%s"];\n' % (escape_id(binding['source']), escape_id(binding['destination']), binding['routing_key'])
 
 def parse_args(): 
     parser = argparse.ArgumentParser()
@@ -58,10 +63,6 @@ if __name__ == '__main__':
 
     definitions = json.load(args.definitions)
     args.definitions.close()
-
-    def writer(s):
-        args.outfile.write(s)
-        args.outfile.write('\n')
         
-    render_definitions(writer, definitions, args.producers, args.consumers)
+    args.outfile.write(build_definitions(definitions, args.producers, args.consumers))
     args.outfile.close()

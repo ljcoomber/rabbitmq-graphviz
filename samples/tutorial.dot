@@ -10,81 +10,61 @@ digraph {
     "Q_direct_logs_2" [label="{||||}", fillcolor="red", shape="record"];
   }
 
-  "C_direct_logs_2" [label="C", fillcolor="#33ccff"];
-  "Q_direct_logs_2" -> "C_direct_logs_2"
-  subgraph cluster_Q_task_queue {
+  "C_direct_logs_2" [label="C", fillcolor="#33ccff"];  "Q_direct_logs_2" -> "C_direct_logs_2"  subgraph cluster_Q_task_queue {
     label="task_queue";
     color=transparent;
     "Q_task_queue" [label="{||||}", fillcolor="red", shape="record"];
   }
 
-  "C_task_queue" [label="C", fillcolor="#33ccff"];
-  "Q_task_queue" -> "C_task_queue"
-  subgraph cluster_Q_direct_logs_1 {
+  "C_task_queue" [label="C", fillcolor="#33ccff"];  "Q_task_queue" -> "C_task_queue"  subgraph cluster_Q_direct_logs_1 {
     label="direct_logs.1";
     color=transparent;
     "Q_direct_logs_1" [label="{||||}", fillcolor="red", shape="record"];
   }
 
-  "C_direct_logs_1" [label="C", fillcolor="#33ccff"];
-  "Q_direct_logs_1" -> "C_direct_logs_1"
-  subgraph cluster_Q_topic_logs_all {
+  "C_direct_logs_1" [label="C", fillcolor="#33ccff"];  "Q_direct_logs_1" -> "C_direct_logs_1"  subgraph cluster_Q_topic_logs_all {
     label="topic_logs.all";
     color=transparent;
     "Q_topic_logs_all" [label="{||||}", fillcolor="red", shape="record"];
   }
 
-  "C_topic_logs_all" [label="C", fillcolor="#33ccff"];
-  "Q_topic_logs_all" -> "C_topic_logs_all"
-  subgraph cluster_Q_logs_1 {
+  "C_topic_logs_all" [label="C", fillcolor="#33ccff"];  "Q_topic_logs_all" -> "C_topic_logs_all"  subgraph cluster_Q_logs_1 {
     label="logs.1";
     color=transparent;
     "Q_logs_1" [label="{||||}", fillcolor="red", shape="record"];
   }
 
-  "C_logs_1" [label="C", fillcolor="#33ccff"];
-  "Q_logs_1" -> "C_logs_1"
-  subgraph cluster_Q_topic_logs_kern {
+  "C_logs_1" [label="C", fillcolor="#33ccff"];  "Q_logs_1" -> "C_logs_1"  subgraph cluster_Q_topic_logs_kern {
     label="topic_logs.kern";
     color=transparent;
     "Q_topic_logs_kern" [label="{||||}", fillcolor="red", shape="record"];
   }
 
-  "C_topic_logs_kern" [label="C", fillcolor="#33ccff"];
-  "Q_topic_logs_kern" -> "C_topic_logs_kern"
-  subgraph cluster_Q_topic_l_logs_critical {
+  "C_topic_logs_kern" [label="C", fillcolor="#33ccff"];  "Q_topic_logs_kern" -> "C_topic_logs_kern"  subgraph cluster_Q_topic_l_logs_critical {
     label="topic_l_logs.critical";
     color=transparent;
     "Q_topic_l_logs_critical" [label="{||||}", fillcolor="red", shape="record"];
   }
 
-  "C_topic_l_logs_critical" [label="C", fillcolor="#33ccff"];
-  "Q_topic_l_logs_critical" -> "C_topic_l_logs_critical"
-  subgraph cluster_X_topic_logs {
+  "C_topic_l_logs_critical" [label="C", fillcolor="#33ccff"];  "Q_topic_l_logs_critical" -> "C_topic_l_logs_critical"  subgraph cluster_X_topic_logs {
     label="topic_logs\ntype=topic";
     color=transparent;
     "X_topic_logs" [label="X", fillcolor="#3333CC", shape="ellipse"];
   }
 
-  "P_topic_logs" [label="P", style="filled", fillcolor="#00ffff"];
-  "P_topic_logs" -> "X_topic_logs";
-  subgraph cluster_X_logs {
+  "P_topic_logs" [label="P", style="filled", fillcolor="#00ffff"];  "P_topic_logs" -> "X_topic_logs";  subgraph cluster_X_logs {
     label="logs\ntype=fanout";
     color=transparent;
     "X_logs" [label="X", fillcolor="#3333CC", shape="ellipse"];
   }
 
-  "P_logs" [label="P", style="filled", fillcolor="#00ffff"];
-  "P_logs" -> "X_logs";
-  subgraph cluster_X_direct_logs {
+  "P_logs" [label="P", style="filled", fillcolor="#00ffff"];  "P_logs" -> "X_logs";  subgraph cluster_X_direct_logs {
     label="direct_logs\ntype=direct";
     color=transparent;
     "X_direct_logs" [label="X", fillcolor="#3333CC", shape="ellipse"];
   }
 
-  "P_direct_logs" [label="P", style="filled", fillcolor="#00ffff"];
-  "P_direct_logs" -> "X_direct_logs";
-  X_direct_logs -> Q_direct_logs_1 [label="error"];
+  "P_direct_logs" [label="P", style="filled", fillcolor="#00ffff"];  "P_direct_logs" -> "X_direct_logs";  X_direct_logs -> Q_direct_logs_1 [label="error"];
   X_direct_logs -> Q_direct_logs_2 [label="error"];
   X_direct_logs -> Q_direct_logs_2 [label="info"];
   X_direct_logs -> Q_direct_logs_1 [label="warning"];
