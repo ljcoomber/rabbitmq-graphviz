@@ -2,19 +2,22 @@ Script to display RabbitMQ topology using graphviz, heavily inspired by the [Rab
 
 To generate the samples (currently only one):
 ```
-$ make setup
 $ make samples
 ```
 
-To run (assuming you have run `make setup`):
+To run:
 ```
-$ . env/bin/activate
 $ python rabbitmq_graphviz.py -d [DEFINITIONS_FILE] -o [DOT_FILE]
+```
+
+For help:
+```
+$ python rabbitmq_graphviz.py -h
 ```
 
 Limitations:
  - there is currently no distinction between vhosts
- - cannot show consumers and publishers as per the RabbitMQ tutorial (because they are not encoded anywhere in the bindings)
+ - assumes one publisher per exchange and one consumer per queue (because the real topology is not known to the broker)
 
 Sample output:
 
