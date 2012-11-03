@@ -18,30 +18,36 @@ def build_definitions(definitions, render_producers, render_consumers):
         '}'])
 
 def build_queue(queue, render_consumers):
+    q_name = queue['name']
+    q_id = escape_id(q_name)
+    
     lines = [
-        '  subgraph cluster_Q_%s {\n' % escape_id(queue['name']),
-        '    label="%s";\n' % queue['name'],
+        '  subgraph cluster_Q_%s {\n' % q_id,
+        '    label="%s";\n' % q_name,
         '    color=transparent;\n',
-        '    "Q_%s" [label="{||||}", fillcolor="red", shape="record"];\n' % escape_id(queue['name']),
+        '    "Q_%s" [label="{||||}", fillcolor="red", shape="record"];\n' % q_id,
         '  }\n\n']
 
     if render_consumers:
-        lines.append('  "C_%s" [label="C", fillcolor="#33ccff"];' % escape_id(queue['name']))
-        lines.append('  "Q_%(name)s" -> "C_%(name)s"' % { 'name': escape_id(queue['name'])})
+        lines.append('  "C_%s" [label="C", fillcolor="#33ccff"];' % q_id)
+        lines.append('  "Q_%(name)s" -> "C_%(name)s"' % { 'name': q_id})
 
     return ''.join(lines)
 
 def build_exchange(exchange, render_producers):
+    x_name = exchange['name']
+    x_id = escape_id(x_name)
+                
     lines = [
-        '  subgraph cluster_X_%s {\n' % escape_id(exchange['name']),
-        '    label="%s\\ntype=%s";\n' % (exchange['name'], exchange['type']),
+        '  subgraph cluster_X_%s {\n' % x_id,
+        '    label="%s\\ntype=%s";\n' % (x_name, exchange['type']),
         '    color=transparent;\n',
-        '    "X_%s" [label="X", fillcolor="#3333CC", shape="ellipse"];\n' % escape_id(exchange['name']),
+        '    "X_%s" [label="X", fillcolor="#3333CC", shape="ellipse"];\n' % x_id,
         '  }\n\n']
 
     if render_producers:
-        lines.append('  "P_%s" [label="P", style="filled", fillcolor="#00ffff"];' % escape_id(exchange['name']))
-        lines.append('  "P_%(name)s" -> "X_%(name)s";' % { 'name': escape_id(exchange['name']) })
+        lines.append('  "P_%s" [label="P", style="filled", fillcolor="#00ffff"];' % x_id)
+        lines.append('  "P_%(name)s" -> "X_%(name)s";' % { 'name': x_id })
 
     return ''.join(lines)
 
