@@ -24,8 +24,10 @@ def render_queue(write, queue, render_consumers):
     write('    color=transparent;')
     write('    "Q_%s" [label="{||||}", fillcolor="red", shape="record"];' % escape_id(queue['name']))
     write('  }\n')
-    write('  "C_%s" [label="C", fillcolor="#33ccff"];' % escape_id(queue['name']))
-    write('  "Q_%(name)s" -> "C_%(name)s"' % { 'name': escape_id(queue['name'])})
+
+    if render_consumers:
+        write('  "C_%s" [label="C", fillcolor="#33ccff"];' % escape_id(queue['name']))
+        write('  "Q_%(name)s" -> "C_%(name)s"' % { 'name': escape_id(queue['name'])})
 
 def render_exchange(write, exchange, render_producers):
     write('  subgraph cluster_X_%s {' % escape_id(exchange['name']))
@@ -33,8 +35,10 @@ def render_exchange(write, exchange, render_producers):
     write('    color=transparent;')
     write('    "X_%s" [label="X", fillcolor="#3333CC", shape="ellipse"];' % escape_id(exchange['name']))
     write('  }\n')
-    write('  "P_%s" [label="P", style="filled", fillcolor="#00ffff"];' % escape_id(exchange['name']))
-    write('  "P_%(name)s" -> "X_%(name)s";' % { 'name': escape_id(exchange['name']) })
+
+    if render_producers:
+        write('  "P_%s" [label="P", style="filled", fillcolor="#00ffff"];' % escape_id(exchange['name']))
+        write('  "P_%(name)s" -> "X_%(name)s";' % { 'name': escape_id(exchange['name']) })
 
 def render_binding(write, binding):
     write('  X_%s -> Q_%s [label="%s"];' % (escape_id(binding['source']), escape_id(binding['destination']), binding['routing_key']))
