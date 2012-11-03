@@ -32,7 +32,7 @@ def render_exchange(write, exchange, render_producers):
     write('    "X_%s" [label="X", fillcolor="#3333CC", shape="ellipse"];' % escape_id(exchange['name']))
     write('  }\n')
     write('  "P_%s" [label="P", style="filled", fillcolor="#00ffff"];' % escape_id(exchange['name']))
-    write('  "P_%s" -> "X_%s";' % (escape_id(exchange['name']), escape_id(exchange['name'])))
+    write('  "P_%(name)s" -> "X_%(name)s";' % { 'name': escape_id(exchange['name']) })
 
 def render_binding(write, binding):
     write('  X_%s -> Q_%s [label="%s"];' % (escape_id(binding['source']), escape_id(binding['destination']), binding['routing_key']))
