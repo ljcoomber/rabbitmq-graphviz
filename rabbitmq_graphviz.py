@@ -3,9 +3,6 @@ import json
 import logging
 import sys
 
-import pystache
-from pystache import render as render
-
 logging.basicConfig(level=logging.INFO)
 
 # TODO:
@@ -13,23 +10,6 @@ logging.basicConfig(level=logging.INFO)
 
 def escape_id(id):
     return id.replace('-', '').replace('.', '_')
-
-escaped_renderer = pystache.Renderer(escape=escape_id)
-
-def mk_writer(file):
-    def writer(tmpl, obj=None, escape=False):
-        if obj:
-            if escape:
-                render_f = escaped_renderer.render
-            else:
-                render_f = render
-
-            file.write(render_f(tmpl + '\n', obj))
-        else:
-            file.write(tmpl + '\n')
-
-    return writer
-
 
 def render_definitions(write, definitions):
     write('digraph {')
@@ -45,21 +25,21 @@ def render_definitions(write, definitions):
     write('}')
 
 def render_queue(write, queue):
-    write('  subgraph cluster_Q_{{name}} {', queue, escape=True)
-    write('    label="{{name}}";', queue)
+    write('  subgraph cluster_Q_%s {' % escape_id(queue['name']))
+    write('    label="%s";' % queue['name'])
     write('    color=transparent;')
-    write('    "Q_{{name}}" [label="{||||}", fillcolor="red", shape="record"];', queue, escape=True)
+    write('    "Q_%s" [label="{||||}", fillcolor="red", shape="record"];' % escape_id(queue['name']))
     write('  }\n')
 
 def render_exchange(write, exchange):
-    write('  subgraph cluster_X_{{name}} {', exchange, escape=True)
-    write('    label="{{name}}\\ntype={{type}}";', exchange)
+    write('  subgraph cluster_X_%s {' % escape_id(exchange['name']))
+    write('    label="%s\\ntype=%s";' % (exchange['name'], exchange['type']))
     write('    color=transparent;')
-    write('    "X_{{name}}" [label="X", fillcolor="#3333CC", shape="ellipse"];', exchange, escape=True)
+    write('    "X_%s" [label="X", fillcolor="#3333CC", shape="ellipse"];' % escape_id(exchange['name']))
     write('  }\n')
 
 def render_binding(write, binding):
-    write('  X_{{source}} -> Q_{{destination}} [label="{{routing_key}}"];', binding, escape=True)
+    write('  X_%s -> Q_%s [label="%s"];' % (escape_id(binding['source']), escape_id(binding['destination']), binding['routing_key']))
 
 def parse_args(): 
     parser = argparse.ArgumentParser()
@@ -75,6 +55,9 @@ if __name__ == '__main__':
     definitions = json.load(args.definitions)
     args.definitions.close()
 
-    render_definitions(mk_writer(args.outfile), definitions)
-
+    def writer(s):
+        args.outfile.write(s)
+        args.outfile.write('\n')
+        
+    render_definitions(writer, definitions)
     args.outfile.close()

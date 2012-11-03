@@ -71,6 +71,6 @@ digraph {
   X_direct_logs -> Q_direct_logs_2 [label="warning"];
   X_logs -> Q_logs_1 [label=""];
   X_topic_logs -> Q_topic_logs_all [label="#"];
-  X_topic_logs -> Q_topic_l_logs_critical [label="*_critical"];
-  X_topic_logs -> Q_topic_logs_kern [label="kern_*"];
+  X_topic_logs -> Q_topic_l_logs_critical [label="*.critical"];
+  X_topic_logs -> Q_topic_logs_kern [label="kern.*"];
 }
