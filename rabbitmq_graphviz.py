@@ -5,25 +5,27 @@ import sys
 def escape_id(id_str):
     return id_str.replace('-', '').replace('.', '_')
 
-def render_definitions(write, definitions, render_producers):
+def render_definitions(write, definitions, render_producers, render_consumers):
     write('digraph {')
     write('  bgcolor=transparent;')
     write('  truecolor=true;')
     write('  rankdir=LR;')
     write('  node [style="filled"];\n')
 
-    [render_queue(write, q) for q in definitions['queues']]
+    [render_queue(write, q, render_consumers) for q in definitions['queues']]
     [render_exchange(write, x, render_producers) for x in definitions['exchanges']]
     [render_binding(write, b) for b in definitions['bindings']]
 
     write('}')
 
-def render_queue(write, queue):
+def render_queue(write, queue, render_consumers):
     write('  subgraph cluster_Q_%s {' % escape_id(queue['name']))
     write('    label="%s";' % queue['name'])
     write('    color=transparent;')
     write('    "Q_%s" [label="{||||}", fillcolor="red", shape="record"];' % escape_id(queue['name']))
     write('  }\n')
+    write('  "C_%s" [label="C", fillcolor="#33ccff"];' % escape_id(queue['name']))
+    write('  "Q_%(name)s" -> "C_%(name)s"' % { 'name': escape_id(queue['name'])})
 
 def render_exchange(write, exchange, render_producers):
     write('  subgraph cluster_X_%s {' % escape_id(exchange['name']))
@@ -44,6 +46,7 @@ def parse_args():
     parser.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'), default=sys.stdout,
                         help='Output file')
     parser.add_argument('-p', '--producers', action='store_true', help='Render producers')
+    parser.add_argument('-c', '--consumers', action='store_true', help='Render consumers')    
     return parser.parse_args()    
 
 if __name__ == '__main__':
@@ -56,5 +59,5 @@ if __name__ == '__main__':
         args.outfile.write(s)
         args.outfile.write('\n')
         
-    render_definitions(writer, definitions, args.producers)
+    render_definitions(writer, definitions, args.producers, args.consumers)
     args.outfile.close()
