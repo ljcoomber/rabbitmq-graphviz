@@ -52,7 +52,10 @@ def build_exchange(exchange, render_producers):
     return ''.join(lines)
 
 def build_binding(binding):
-    return '  X_%s -> Q_%s [label="%s"];\n' % (escape_id(binding['source']), escape_id(binding['destination']), binding['routing_key'])
+    if binding['destination_type']=='exchange':
+		return '  X_%s -> X_%s [label="%s"];\n' % (escape_id(binding['source']), escape_id(binding['destination']), binding['routing_key'])
+    else:
+		return '  X_%s -> Q_%s [label="%s"];\n' % (escape_id(binding['source']), escape_id(binding['destination']), binding['routing_key'])
 
 def parse_args(): 
     parser = argparse.ArgumentParser()
