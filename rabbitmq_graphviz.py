@@ -12,9 +12,9 @@ def build_definitions(definitions, vhost, render_producers, render_consumers):
         '  truecolor=true;\n',
         '  rankdir=LR;\n',
         '  node [style="filled"];\n\n',
-        ''.join([build_queue(q, render_consumers) for q in definitions['queues'] if q['vhost']==vhost]),
-        ''.join([build_exchange(x, render_producers) for x in definitions['exchanges'] if x['vhost']==vhost]),
-        ''.join([build_binding(b) for b in definitions['bindings'] if b['vhost']==vhost]),
+        ''.join([build_queue(q, render_consumers) for q in definitions['queues'] if q['vhost'] == vhost]),
+        ''.join([build_exchange(x, render_producers) for x in definitions['exchanges'] if x['vhost'] == vhost]),
+        ''.join([build_binding(b) for b in definitions['bindings'] if b['vhost'] == vhost]),
         '}'])
 
 def build_queue(queue, render_consumers):
@@ -52,10 +52,10 @@ def build_exchange(exchange, render_producers):
     return ''.join(lines)
 
 def build_binding(binding):
-    if binding['destination_type']=='exchange':
-		return '  X_%s -> X_%s [label="%s"];\n' % (escape_id(binding['source']), escape_id(binding['destination']), binding['routing_key'])
+    if binding['destination_type'] == 'exchange':
+        return '  X_%s -> X_%s [label="%s"];\n' % (escape_id(binding['source']), escape_id(binding['destination']), binding['routing_key'])
     else:
-		return '  X_%s -> Q_%s [label="%s"];\n' % (escape_id(binding['source']), escape_id(binding['destination']), binding['routing_key'])
+        return '  X_%s -> Q_%s [label="%s"];\n' % (escape_id(binding['source']), escape_id(binding['destination']), binding['routing_key'])
 
 def parse_args(): 
     parser = argparse.ArgumentParser()
