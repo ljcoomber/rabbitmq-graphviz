@@ -1,0 +1,41 @@
+digraph {
+  bgcolor=transparent;
+  truecolor=true;
+  rankdir=LR;
+  node [style="filled"];
+
+  subgraph cluster_Q_a_queue {
+    label="a_queue";
+    color=transparent;
+    "Q_a_queue" [label="{||||}", fillcolor="red", shape="record"];
+  }
+
+  "C_a_queue" [label="C", fillcolor="#33ccff"];  "Q_a_queue" -> "C_a_queue"  subgraph cluster_Q_b_queue {
+    label="b_queue";
+    color=transparent;
+    "Q_b_queue" [label="{||||}", fillcolor="red", shape="record"];
+  }
+
+  "C_b_queue" [label="C", fillcolor="#33ccff"];  "Q_b_queue" -> "C_b_queue"  subgraph cluster_X_external_exchange {
+    label="external_exchange\ntype=topic";
+    color=transparent;
+    "X_external_exchange" [label="X", fillcolor="#3333CC", shape="ellipse"];
+  }
+
+  subgraph cluster_X_internal_exchange1 {
+    label="internal_exchange1\ntype=fanout";
+    color=transparent;
+    "X_internal_exchange1" [label="X", fillcolor="#3333CC", shape="ellipse"];
+  }
+
+  subgraph cluster_X_internal_exchange2 {
+    label="internal_exchange2\ntype=fanout";
+    color=transparent;
+    "X_internal_exchange2" [label="X", fillcolor="#3333CC", shape="ellipse"];
+  }
+
+  X_external_exchange -> X_internal_exchange1 [label="foo"];
+  X_external_exchange -> X_internal_exchange2 [label="bar"];
+  X_internal_exchange1 -> Q_a_queue [label=""];
+  X_internal_exchange1 -> Q_b_queue [label=""];
+}
