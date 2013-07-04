@@ -65,7 +65,7 @@ def parse_args():
                         help='Output file')
     parser.add_argument('-p', '--producers', action='store_true', help='Render producers')
     parser.add_argument('-c', '--consumers', action='store_true', help='Render consumers')    
-    parser.add_argument('-v', '--vhost', nargs='?', default='/', help='Restrict to this vhost')  
+    parser.add_argument('-x', '--vhost', nargs='?', default='/', help='Restrict to this vhost')  
     return parser.parse_args()    
 
 if __name__ == '__main__':
