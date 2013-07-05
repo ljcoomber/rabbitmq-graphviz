@@ -6,15 +6,19 @@ def escape_id(id_str):
     return id_str.replace('-', '').replace('.', '_')
 
 def build_definitions(definitions, vhost, render_producers, render_consumers):
+
+    def is_same_vhost(entity_dict):
+        return entity_dict['vhost'] == vhost
+
     return ''.join([
         'digraph {\n',
         '  bgcolor=transparent;\n',
         '  truecolor=true;\n',
         '  rankdir=LR;\n',
         '  node [style="filled"];\n\n',
-        ''.join([build_queue(q, render_consumers) for q in definitions['queues'] if q['vhost'] == vhost]),
-        ''.join([build_exchange(x, render_producers) for x in definitions['exchanges'] if x['vhost'] == vhost]),
-        ''.join([build_binding(b) for b in definitions['bindings'] if b['vhost'] == vhost]),
+        ''.join([build_queue(q, render_consumers) for q in filter(is_same_vhost, definitions['queues'])]),
+        ''.join([build_exchange(x, render_producers) for x in filter(is_same_vhost, definitions['exchanges'])]),
+        ''.join([build_binding(b) for b in filter(is_same_vhost, definitions['bindings'])]),
         '}'])
 
 def build_queue(queue, render_consumers):
