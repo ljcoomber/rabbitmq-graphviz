@@ -19,6 +19,7 @@ def build_definitions(definitions, vhost, render_producers, render_consumers):
         ''.join([build_queue(q, render_consumers) for q in filter(is_same_vhost, definitions['queues'])]),
         ''.join([build_exchange(x, render_producers) for x in filter(is_same_vhost, definitions['exchanges'])]),
         ''.join([build_binding(b) for b in filter(is_same_vhost, definitions['bindings'])]),
+        ''.join([build_dlx_link(q) for q in filter(is_same_vhost, definitions['queues'])]),
         '}'])
 
 def build_queue(queue, render_consumers):
@@ -60,6 +61,18 @@ def build_binding(binding):
         return '  X_%s -> X_%s [label="%s"];\n' % (escape_id(binding['source']), escape_id(binding['destination']), binding['routing_key'])
     else:
         return '  X_%s -> Q_%s [label="%s"];\n' % (escape_id(binding['source']), escape_id(binding['destination']), binding['routing_key'])
+
+def build_dlx_link(queue):
+    q_args = queue.get('arguments', None)
+    if(q_args):
+        dlx_name = q_args.get('x-dead-letter-exchange', None)
+        msg_ttl = q_args.get('x-message-ttl', None)
+        if(dlx_name):
+            ttl_txt = ''
+            if(msg_ttl):
+                ttl_txt = '\nMessage TTL: %sms' % msg_ttl
+            return '  Q_%s -> X_%s [label="DLX%s", style="dotted"];\n' % (escape_id(queue['name']), escape_id(dlx_name), ttl_txt)
+    return ''
 
 def parse_args(): 
     parser = argparse.ArgumentParser()
